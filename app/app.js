@@ -1,3 +1,5 @@
+const input = document.querySelector("input");
+input.addEventListener("input", handleInput);
 const constructFromData = (userObj) => {
     const user = {
         name: userObj.firstName,
@@ -11,6 +13,15 @@ const constructFromData = (userObj) => {
     return user;
 };
 
+const arrangeData = (arr) => {
+    const res = [];
+    for (let i = 0; i < arr.length; i++) {
+        const element = constructFromData(arr[i]);
+        res.push(element);
+    }
+    return res;
+};
+
 const fetchData = async (url) => {
     const mainDB = url;
     try {
@@ -21,16 +32,18 @@ const fetchData = async (url) => {
         const responseRes = await response.json();
         return responseRes;
     } catch (error) {
-        throw `ERROR! `;
+        console.error(`Could not get data: ${error}`);
     }
 };
 
 const extractUserByID = async (arr) => {
-    let res = [arr.length];
+    let res = [];
     for (let user of arr) {
-        const f = fetchData(user.id);
+        let userURL = `https://capsules7.herokuapp.com/api/user/${user.id}`;
+        const f = fetchData(userURL);
         res.push(f);
     }
+    //let fRes = await res;
     let fRes = await Promise.all(res);
     return fRes;
 };
@@ -38,18 +51,15 @@ const extractUserByID = async (arr) => {
 const getData = async () => {
     const group1URL = `https://capsules7.herokuapp.com/api/group/one`;
     const group2URL = `https://capsules7.herokuapp.com/api/group/two`;
-    const userURL = `https://capsules7.herokuapp.com/api/user/003`;
-    const group1Res = await fetchData(group1URL);
-    const group2Res = await fetchData(group2URL);
-    const dataGroup1 = group1Res; //arr of objs
-    const dataGroup2 = group2Res; //arr of objs
-    const mergeData = dataGroup1.concat(dataGroup2);
-    console.log(dataGroup1);
-    console.log(dataGroup2);
+    const group1Response = fetchData(group1URL);
+    const group2Response = fetchData(group2URL);
+    const results2Groups = await Promise.all([group1Response, group2Response]);
+    const mergeData = results2Groups[0].concat(results2Groups[1]); // arr of objs
     console.log(mergeData);
-
-    //const homeWorlds = await extractHomeWorlds(data);
-    //return combineData(data, homeWorlds);
+    const users = await extractUserByID(mergeData);
+    console.log(users);
+    const arrangedUsers = arrangeData(users); //Not mandatory(just for practice)
+    console.log(arrangedUsers);
 };
 
 getData();
