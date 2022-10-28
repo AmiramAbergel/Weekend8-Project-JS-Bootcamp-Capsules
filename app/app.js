@@ -1,5 +1,37 @@
+const drawUser = async () => {
+    const usersDataArr = await getData();
+
+    const plot = document.querySelector(".container .plot");
+    const ulParent = document.createElement("ul");
+    const userContainer = document.createElement("li");
+    const userID = document.createElement("p");
+    const userName = document.createElement("p");
+    const userCapsule = document.createElement("p");
+    const userAge = document.createElement("p");
+    const userCity = document.createElement("p");
+    const userGender = document.createElement("p");
+    const userHobby = document.createElement("p");
+};
+
+const searchUser = async () => {
+    const usersDataArr = await getData();
+    for (const user in usersDataArr) {
+        if (Object.hasOwnProperty.call(user, key)) {
+            const element = object[key];
+        }
+    }
+};
+
+const handleInput = (event) => {
+    const input = event.target.value;
+    console.log(input);
+};
 const input = document.querySelector("input");
 input.addEventListener("input", handleInput);
+//-------------------------------------------
+// Loading spinner
+const setSpinner = (bool) => {};
+//----------------------------------------
 const constructFromData = (userObj) => {
     const user = {
         name: userObj.firstName,
@@ -45,6 +77,9 @@ const extractUserByID = async (arr) => {
     }
     //let fRes = await res;
     let fRes = await Promise.all(res);
+    // if (fRes.data.Error) {    // should handle error option!!
+    //     return [];
+    // }
     return fRes;
 };
 
@@ -61,5 +96,4 @@ const getData = async () => {
     const arrangedUsers = arrangeData(users); //Not mandatory(just for practice)
     console.log(arrangedUsers);
 };
-
 getData();
