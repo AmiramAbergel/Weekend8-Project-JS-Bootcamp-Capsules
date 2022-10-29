@@ -11,6 +11,8 @@ const drawUser = async () => {
         removeBtn.textContent = "Delete";
         editBtn.textContent = "Edit";
         userContainer.classList.add(`${user.id}`);
+        removeBtn.addEventListener("click", removeRow);
+        editBtn.addEventListener("click", editRow);
         for (const [key, value] of Object.entries(user)) {
             const contentContainer = document.createElement("div");
             contentContainer.classList.add(`${key}`);
@@ -22,10 +24,14 @@ const drawUser = async () => {
         ulParent.appendChild(userContainer);
     });
     console.log(ulParent);
+
     plot.appendChild(ulParent);
 };
 
-const removeRow = () => {};
+const removeRow = (event) => {
+    const input = event.target;
+    input.parentElement.style.display = "none";
+};
 
 const editRow = () => {};
 
