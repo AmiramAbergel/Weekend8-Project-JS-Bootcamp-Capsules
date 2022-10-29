@@ -1,3 +1,18 @@
+const traverseUserData = (obj) => {
+    let res = [];
+    for (const [key, value] of Object.entries(obj)) {
+        const contentContainer = document.createElement("div");
+        contentContainer.classList.add(`${key}`);
+
+        contentContainer.setAttribute("data-init", `${value}`);
+        const content = document.createElement("p");
+        content.textContent = value;
+        contentContainer.appendChild(content);
+        res.push(contentContainer);
+    }
+    return res;
+};
+
 const drawUser = async () => {
     const usersDataArr = await getData();
     const plot = document.querySelector(".container .plot");
@@ -13,14 +28,8 @@ const drawUser = async () => {
         userContainer.classList.add(`${user.id}`);
         removeBtn.addEventListener("click", removeRow);
         editBtn.addEventListener("click", editRow);
-        for (const [key, value] of Object.entries(user)) {
-            const contentContainer = document.createElement("div");
-            contentContainer.classList.add(`${key}`);
-            const content = document.createElement("p");
-            content.textContent = value;
-            contentContainer.appendChild(content);
-            userContainer.append(contentContainer, removeBtn, editBtn);
-        }
+        const userContent = traverseUserData(user);
+        userContainer.append(...userContent, removeBtn, editBtn);
         ulParent.appendChild(userContainer);
     });
     console.log(ulParent);
@@ -28,12 +37,78 @@ const drawUser = async () => {
     plot.appendChild(ulParent);
 };
 
+const handleCancel = (event) => {
+    const input = event.target;
+    const userContainer = input.parentElement.querySelectorAll("p");
+    console.log(userContainer);
+    userContainer.forEach((data) => {
+        data.textContent = data.parentElement.dataset.init;
+    });
+    input.style.display = "none";
+    input.nextSibling.style.display = "none";
+    const removeBtn = document.createElement("button");
+    const editBtn = document.createElement("button");
+    removeBtn.classList.add("removeBtn", "btn");
+    editBtn.classList.add("editBtn", "btn");
+    removeBtn.textContent = "Delete";
+    editBtn.textContent = "Edit";
+    removeBtn.addEventListener("click", removeRow);
+    editBtn.addEventListener("click", editRow);
+    input.parentElement.append(removeBtn, editBtn);
+};
+const handleConfirm = (event) => {
+    const input = event.target;
+    manageNewInput(false, input.parentElement);
+};
+
 const removeRow = (event) => {
     const input = event.target;
     input.parentElement.style.display = "none";
 };
 
-const editRow = () => {};
+let active = false;
+const myFunc = (event) => {
+    const input = event.target;
+    console.dir(input);
+    if (
+        input &&
+        !input.matches("li div.id p") &&
+        !input.matches(".btn") &&
+        input.matches("p")
+    ) {
+        console.log(input);
+        input.focus();
+        input.setAttribute("onblur", false);
+        input.setAttribute("contenteditable", true);
+    }
+};
+const manageNewInput = (bool, element) => {
+    if (bool === true) {
+        element.addEventListener("mousedown", myFunc);
+    } else {
+        element.removeEventListener("mousedown", myFunc);
+        element.querySelectorAll("[contenteditable=true]").forEach((data) => {
+            data.setAttribute("contenteditable", false);
+            console.log(data);
+        });
+    }
+};
+
+const editRow = (event) => {
+    const input = event.target;
+    input.style.display = "none";
+    input.previousSibling.style.display = "none";
+    manageNewInput(true, input.parentElement);
+    const cancelBtn = document.createElement("button");
+    const confirmBtn = document.createElement("button");
+    cancelBtn.classList.add("cancelBtn", "btn");
+    confirmBtn.classList.add("confirmBtn", "btn");
+    cancelBtn.textContent = "Cancel";
+    confirmBtn.textContent = "Confirm";
+    cancelBtn.addEventListener("mousedown", handleCancel);
+    confirmBtn.addEventListener("mousedown", handleConfirm);
+    input.parentElement.append(cancelBtn, confirmBtn);
+};
 
 const searchUser = async () => {
     const usersDataArr = await getData();
