@@ -1,16 +1,29 @@
 const drawUser = async () => {
     const usersDataArr = await getData();
-
     const plot = document.querySelector(".container .plot");
     const ulParent = document.createElement("ul");
-    const userContainer = document.createElement("li");
-    const userID = document.createElement("p");
-    const userName = document.createElement("p");
-    const userCapsule = document.createElement("p");
-    const userAge = document.createElement("p");
-    const userCity = document.createElement("p");
-    const userGender = document.createElement("p");
-    const userHobby = document.createElement("p");
+    usersDataArr.forEach((user) => {
+        const userContainer = document.createElement("li");
+        userContainer.classList.add(`${user.id}`);
+        for (const [key, value] of Object.entries(user)) {
+            const contentContainer = document.createElement("div");
+            contentContainer.classList.add(`${key}`);
+            const content = document.createElement("p");
+            content.textContent = value;
+            contentContainer.appendChild(content);
+            userContainer.appendChild(contentContainer);
+        }
+        ulParent.appendChild(userContainer);
+    });
+    console.log(ulParent);
+    plot.appendChild(ulParent);
+    // const userID = document.createElement("div");
+    // const userName = document.createElement("div");
+    // const userCapsule = document.createElement("div");
+    // const userAge = document.createElement("div");
+    // const userCity = document.createElement("div");
+    // const userGender = document.createElement("div");
+    // const userHobby = document.createElement("div");
 };
 
 const searchUser = async () => {
@@ -34,6 +47,7 @@ const setSpinner = (bool) => {};
 //----------------------------------------
 const constructFromData = (userObj) => {
     const user = {
+        id: userObj.id,
         name: userObj.firstName,
         lastName: userObj.lastName,
         capsule: userObj.capsule,
@@ -94,6 +108,8 @@ const getData = async () => {
     const users = await extractUserByID(mergeData);
     console.log(users);
     const arrangedUsers = arrangeData(users); //Not mandatory(just for practice)
-    console.log(arrangedUsers);
+    return arrangedUsers;
 };
-getData();
+//getData();
+
+drawUser();

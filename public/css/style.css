@@ -3,3 +3,13 @@
     padding: 0;
     margin: 0;
 }
+
+.container .plot ul {
+    display: flex;
+    flex-direction: column;
+}
+
+.container .plot ul li {
+    display: flex;
+    justify-content: space-between;
+}
