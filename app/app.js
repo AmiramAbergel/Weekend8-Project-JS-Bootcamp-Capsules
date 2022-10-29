@@ -4,6 +4,12 @@ const drawUser = async () => {
     const ulParent = document.createElement("ul");
     usersDataArr.forEach((user) => {
         const userContainer = document.createElement("li");
+        const removeBtn = document.createElement("button");
+        const editBtn = document.createElement("button");
+        removeBtn.classList.add("removeBtn", "btn");
+        editBtn.classList.add("editBtn", "btn");
+        removeBtn.textContent = "Delete";
+        editBtn.textContent = "Edit";
         userContainer.classList.add(`${user.id}`);
         for (const [key, value] of Object.entries(user)) {
             const contentContainer = document.createElement("div");
@@ -11,20 +17,17 @@ const drawUser = async () => {
             const content = document.createElement("p");
             content.textContent = value;
             contentContainer.appendChild(content);
-            userContainer.appendChild(contentContainer);
+            userContainer.append(contentContainer, removeBtn, editBtn);
         }
         ulParent.appendChild(userContainer);
     });
     console.log(ulParent);
     plot.appendChild(ulParent);
-    // const userID = document.createElement("div");
-    // const userName = document.createElement("div");
-    // const userCapsule = document.createElement("div");
-    // const userAge = document.createElement("div");
-    // const userCity = document.createElement("div");
-    // const userGender = document.createElement("div");
-    // const userHobby = document.createElement("div");
 };
+
+const removeRow = () => {};
+
+const editRow = () => {};
 
 const searchUser = async () => {
     const usersDataArr = await getData();
