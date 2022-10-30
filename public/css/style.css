@@ -14,6 +14,11 @@
     justify-content: space-between;
 }
 
+p {
+    width: 150px;
+    text-align: center;
+}
+
 /* Button */
 .btn {
     cursor: pointer;
